@@ -1,5 +1,4 @@
 ﻿using System;
-using csp = System.Security.Cryptography;
 using Renci.SshNet.Security.Cryptography.Ciphers;
 
 namespace Renci.SshNet.Security.Cryptography
@@ -62,22 +61,7 @@ namespace Renci.SshNet.Security.Cryptography
             _padding = padding;
 
             if (_mode != null)
-            {
-#if FEATURE_AES_CSP
-                // use AesCryptoServiceProvider which uses AES-NI (faster, less CPU usage)
-                csp.AesCryptoServiceProvider aesProvider = new csp.AesCryptoServiceProvider()
-                {
-                    BlockSize = blockSize * 8,
-                    KeySize = Key.Length * 8,
-                    Mode = _mode.cspMode,
-                    Padding = padding == null ? csp.PaddingMode.None : csp.PaddingMode.PKCS7,
-                    Key = key
-                };
-                _mode.Init(this, aesProvider);
-#else
                 _mode.Init(this);
-#endif
-            }
         }
 
         /// <summary>
@@ -89,37 +73,33 @@ namespace Renci.SshNet.Security.Cryptography
         /// <returns>Encrypted data</returns>
         public override byte[] Encrypt(byte[] data, int offset, int length)
         {
+            if (length % _blockSize > 0)
+            {
+                if (_padding == null)
+                {
+                    throw new ArgumentException("data");
+                }
+                var paddingLength = _blockSize - (length % _blockSize);
+                data = _padding.Pad(data, offset, length, paddingLength);
+                length += paddingLength;
+                offset = 0;
+            }
+
             var output = new byte[length];
             var writtenBytes = 0;
 
-#if FEATURE_AES_CSP
-            if (_mode != null && _mode.isCspAvailable)
-                writtenBytes = _mode.EncryptWithCSP(data, offset, output);
-            else
+            for (var i = 0; i < length / _blockSize; i++)
             {
-#endif
-                if (length % _blockSize > 0)
+                if (_mode == null)
                 {
-                    if (_padding == null)
-                    {
-                        throw new ArgumentException("data");
-                    }
-                    var paddingLength = _blockSize - (length % _blockSize);
-                    data = _padding.Pad(data, offset, length, paddingLength);
-                    length += paddingLength;
-                    offset = 0;
+                    writtenBytes += EncryptBlock(data, offset + (i * _blockSize), _blockSize, output, i * _blockSize);
                 }
-
-                for (var i = 0; i < length / _blockSize; i++)
+                else
                 {
-                    if (_mode == null)
-                        writtenBytes += EncryptBlock(data, offset + (i * _blockSize), _blockSize, output, i * _blockSize);
-                    else
-                        writtenBytes += _mode.EncryptBlock(data, offset + (i * _blockSize), _blockSize, output, i * _blockSize);
+                    writtenBytes += _mode.EncryptBlock(data, offset + (i * _blockSize), _blockSize, output, i * _blockSize);
                 }
-#if FEATURE_AES_CSP
             }
-#endif
+
             if (writtenBytes < length)
             {
                 throw new InvalidOperationException("Encryption error.");
@@ -149,36 +129,32 @@ namespace Renci.SshNet.Security.Cryptography
         /// </returns>
         public override byte[] Decrypt(byte[] data, int offset, int length)
         {
-            var output = new byte[length];
-            var writtenBytes = 0;
-
-#if FEATURE_AES_CSP
-            if (_mode != null && _mode.isCspAvailable)
-                writtenBytes = _mode.DecryptWithCSP(data, offset, output);
-            else
+            if (length % _blockSize > 0)
             {
-#endif
-                if (length % _blockSize > 0)
+                if (_padding == null)
                 {
-                    if (_padding == null)
-                    {
-                        throw new ArgumentException("data");
-                    }
-                    data = _padding.Pad(_blockSize, data, offset, length);
-                    offset = 0;
-                    length = data.Length;
+                    throw new ArgumentException("data");
                 }
-
-                for (var i = 0; i < length / _blockSize; i++)
-                {
-                    if (_mode == null)
-                        writtenBytes += DecryptBlock(data, offset + (i * _blockSize), _blockSize, output, i * _blockSize);
-                    else
-                        writtenBytes += _mode.DecryptBlock(data, offset + (i * _blockSize), _blockSize, output, i * _blockSize);
-                }
-#if FEATURE_AES_CSP
+                data = _padding.Pad(_blockSize, data, offset, length);
+                offset = 0;
+                length = data.Length;
             }
-#endif
+
+            var output = new byte[length];
+
+            var writtenBytes = 0;
+            for (var i = 0; i < length / _blockSize; i++)
+            {
+                if (_mode == null)
+                {
+                    writtenBytes += DecryptBlock(data, offset + (i * _blockSize), _blockSize, output, i * _blockSize);
+                }
+                else
+                {
+                    writtenBytes += _mode.DecryptBlock(data, offset + (i * _blockSize), _blockSize, output, i * _blockSize);
+                }
+            }
+
             if (writtenBytes < length)
             {
                 throw new InvalidOperationException("Encryption error.");
