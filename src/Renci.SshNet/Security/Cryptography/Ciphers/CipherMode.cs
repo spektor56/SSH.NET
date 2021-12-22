@@ -15,7 +15,7 @@ namespace Renci.SshNet.Security.Cryptography.Ciphers
         /// <summary>
         /// Gets the IV vector.
         /// </summary>
-        protected byte[] IV;
+        internal byte[] IV {get; private set;}
 
         /// <summary>
         /// Holds block size of the cipher.
