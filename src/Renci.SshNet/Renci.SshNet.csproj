@@ -7,7 +7,7 @@
     <AssemblyOriginatorKeyFile>../Renci.SshNet.snk</AssemblyOriginatorKeyFile>
     <LangVersion>6</LangVersion>
     <SignAssembly>true</SignAssembly>
-    <TargetFrameworks>netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
 
