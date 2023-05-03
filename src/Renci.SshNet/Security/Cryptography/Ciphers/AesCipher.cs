@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using Renci.SshNet.Common;
-using csp = System.Security.Cryptography;
+using Csp = System.Security.Cryptography;
 
 namespace Renci.SshNet.Security.Cryptography.Ciphers
 {
@@ -26,9 +26,9 @@ namespace Renci.SshNet.Security.Cryptography.Ciphers
 
 #if FEATURE_AES_CSP
 
-        private csp.ICryptoTransform aesDecryptor;
+        private Csp.ICryptoTransform aesDecryptor;
 
-        private csp.ICryptoTransform aesEncryptor;
+        private Csp.ICryptoTransform aesEncryptor;
 
         private bool useCSP;       // set to false when CSP is not available for a given mode; falls back to legacy code
         
@@ -765,16 +765,16 @@ namespace Renci.SshNet.Security.Cryptography.Ciphers
             {
                 // use the provided CipherPadding object
                 _padding = padding;
-                csp.PaddingMode cspPadding = csp.PaddingMode.None; 
-                
+                Csp.PaddingMode cspPadding = Csp.PaddingMode.None;
+
                 // set the Mode
-                csp.CipherMode cspMode = 0;
+                Csp.CipherMode cspMode = 0;
                 isCTRMode = mode is Modes.CtrCipherMode;
 
                 if (mode is Modes.CbcCipherMode)
-                    cspMode = csp.CipherMode.CBC;
+                    cspMode = Csp.CipherMode.CBC;
                 else if (isCTRMode)
-                    cspMode = csp.CipherMode.ECB;       // CTR uses ECB
+                    cspMode = Csp.CipherMode.ECB;       // CTR uses ECB
                 else
                     return false;                       // OFB and CFB not supported, fallback to managed code
 
@@ -783,7 +783,7 @@ namespace Renci.SshNet.Security.Cryptography.Ciphers
                     _ctrIV = GetPackedIV(mode.IV);
 
                 // create ICryptoTransform instances
-                var aesProvider = new csp.AesCryptoServiceProvider()
+                var aesProvider = new Csp.AesCryptoServiceProvider()
                 {
                     BlockSize = BlockSize * 8,
                     KeySize = Key.Length * 8,
