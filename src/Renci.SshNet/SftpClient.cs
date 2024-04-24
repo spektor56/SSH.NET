@@ -1596,7 +1596,7 @@ namespace Renci.SshNet
             using (var stream = OpenRead(path))
             {
                 var buffer = new byte[stream.Length];
-                stream.Read(buffer, 0, buffer.Length);
+                _ = stream.Read(buffer, 0, buffer.Length);
                 return buffer;
             }
         }

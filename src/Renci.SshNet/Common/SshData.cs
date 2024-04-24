@@ -133,7 +133,7 @@ namespace Renci.SshNet.Common
         {
             var bytesLength = (int) (_stream.Length - _stream.Position);
             var data = new byte[bytesLength];
-            _stream.Read(data, 0, bytesLength);
+            _ = _stream.Read(data, 0, bytesLength);
             return data;
         }
 
