@@ -4,7 +4,7 @@
     <AssemblyName>Renci.SshNet</AssemblyName>
     <Product>SSH.NET</Product>
     <AssemblyTitle>SSH.NET</AssemblyTitle>
-    <TargetFrameworks>net462;netstandard2.0;net8.0;net9.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>net10.0</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -23,6 +23,7 @@
     <NBGV_ThisAssemblyIncludesPackageVersion>true</NBGV_ThisAssemblyIncludesPackageVersion>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <Platforms>x64;ARM64</Platforms>
   </PropertyGroup>
 
   <Target Name="SetVersionProperties" BeforeTargets="Build" DependsOnTargets="GetBuildVersion">
