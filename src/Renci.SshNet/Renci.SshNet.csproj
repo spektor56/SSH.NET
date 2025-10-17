@@ -25,14 +25,6 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
-
-  <Target Name="SetVersionProperties" BeforeTargets="Build" DependsOnTargets="GetBuildVersion">
-    <!-- For properties which depend on those set by NBGV -->
-    <PropertyGroup>
-      <PackageReleaseNotes>https://github.com/sshnet/SSH.NET/releases/tag/$(Version)</PackageReleaseNotes>
-    </PropertyGroup>
-  </Target>
-    
   <PropertyGroup Condition="'$(CI)' != ''">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
