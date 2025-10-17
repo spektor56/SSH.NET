@@ -33,7 +33,7 @@ namespace Renci.SshNet
         internal const byte LineFeed = 0x0a;
 
         private static readonly string ClientVersionString =
-            "SSH-2.0-Renci.SshNet.SshClient." + ThisAssembly.NuGetPackageVersion.Replace('-', '_');
+            "SSH-2.0-Renci.SshNet.SshClient.OPTK";
 
         /// <summary>
         /// Specifies maximum packet size defined by the protocol.
