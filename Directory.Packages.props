@@ -11,7 +11,7 @@
     <PackageVersion Include="GitHubActionsTestLogger" Version="2.4.1" />
     <PackageVersion Include="Meziantou.Analyzer" Version="2.0.220" />
     <!-- Should stay on LTS .NET releases. -->
-    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0-rc.2.25502.107" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="10.0.0-rc.2.25502.107" />
     <PackageVersion Include="MSTest" Version="3.9.3" />
     <PackageVersion Include="Moq" Version="4.20.72" />
