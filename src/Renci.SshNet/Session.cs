@@ -70,7 +70,7 @@ namespace Renci.SshNet
         private const int LocalChannelDataPacketSize = 1024 * 64;
 
         internal static readonly string ClientVersionString =
-            "SSH-2.0-Renci.SshNet.SshClient." + ThisAssembly.NuGetPackageVersion.Replace('-', '_');
+            "SSH-2.0-Renci.SshNet.SshClient.OPTK";
 
         /// <summary>
         /// Holds the factory to use for creating new services.
