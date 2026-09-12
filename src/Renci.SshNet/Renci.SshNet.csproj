@@ -6,6 +6,8 @@
     <AssemblyTitle>SSH.NET</AssemblyTitle>
     <TargetFrameworks>net11.0</TargetFrameworks>
     <Platforms>x64;ARM64</Platforms>
+    <Platform Condition="'$(Platform)' == 'AnyCPU'">x64</Platform>
+    <PlatformTarget>$(Platform)</PlatformTarget>
   </PropertyGroup>
 
   <PropertyGroup>
